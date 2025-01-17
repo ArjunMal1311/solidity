@@ -48,6 +48,12 @@ contract FundMe {
 
     function withdraw() public onlyOwner {
         uint256 fundersLength = s_funders.length;
+
+        // Made it efficient by calling the length from funders array from the storage only once
+        // rather than using s_funders.length in the for loop
+
+        // Remember calling the length of the array from storage is expensive
+        // so we should avoid it as much as possible
         for (
             uint256 funderIndex = 0;
             funderIndex < fundersLength;

@@ -13,6 +13,42 @@ contract FundMeTest is Test {
     uint256 constant SEND_VALUE = 0.1 ether;
     uint256 constant STARTING_BALANCE = 10 ether;
 
+    // Storage variables 
+    // When we talk about global variables they are stuck in something called storage
+    // its like a big giant list of all variables that we create
+    // it gets stored in the blockchain
+    // [0] is the first variable
+    // [1] is the second variable
+    // [2] is the third variable
+    // [3] is the fourth variable
+    // .....
+
+    // 0x00.....19 [uint256]
+    // 0x00.....01 [boolean]
+
+    // in case there is dynmaic array or mapping there are dynamic values
+    // these are stored in the storage with the help of hashing function
+
+    // at [2] we have the array length 0x00....01
+    // at [3] we have the [keccack256(2)] 0x00..0de which is the element of the array
+
+    // constant and immutable do not take spots in storage
+    // they are part of contract's bytecode
+
+    // variables inside functions are not stored in storage
+    // they are added to their own data structure like stack or memory
+    // and are deleted after the function call is finished
+
+    // we can get to know more about through the below command
+    // forge inspect FundMe storageLayout
+
+    // Reading and writing to storage is expensive
+    // so we should avoid it as much as possible
+
+    // we can read and write from memory
+    // memory is a temporary storage
+    // it is deleted after the function call is finished
+
     // Add receive function to accept ETH
     receive() external payable {}
 
