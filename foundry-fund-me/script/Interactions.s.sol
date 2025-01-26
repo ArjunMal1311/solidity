@@ -1,6 +1,9 @@
 // Here we will have all the interactions with the contracts
 
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
+
+// we dont have a programmtic way to do things like funding and withdraw like we do cast send things
+
 pragma solidity ^0.8.18;
 
 import {Script} from "forge-std/Script.sol";
