@@ -2,8 +2,8 @@
 pragma solidity ^0.8.13;
 
 import {Test} from "forge-std/Test.sol";
-import {FundMe} from "../src/FundMe.sol";
-import {HelperConfig} from "../script/HelperConfig.s.sol";
+import {FundMe} from "../../src/FundMe.sol";
+import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {console} from "forge-std/console.sol";
 
 contract FundMeTest is Test {
@@ -13,7 +13,7 @@ contract FundMeTest is Test {
     uint256 constant SEND_VALUE = 0.1 ether;
     uint256 constant STARTING_BALANCE = 10 ether;
 
-    // Storage variables 
+    // Storage variables
     // When we talk about global variables they are stuck in something called storage
     // its like a big giant list of all variables that we create
     // it gets stored in the blockchain
@@ -59,7 +59,7 @@ contract FundMeTest is Test {
         vm.deal(USER, STARTING_BALANCE);
     }
 
-    function testMinimumDollarIsFive() public view {
+    function testMinimumDollarIsFive() public {
         assertEq(fundMe.MINIMUM_USD(), 5e18);
     }
 
@@ -67,11 +67,11 @@ contract FundMeTest is Test {
     //     assertEq(fundMe.i_owner(), address(this));
     // }
 
-    function testOwnerIsMsgSender() public view {
+    function testOwnerIsMsgSender() public {
         assertEq(fundMe.getOwner(), address(this));
     }
 
-    function testPriceFeedVersionIsAccurate() public view {
+    function testPriceFeedVersionIsAccurate() public {
         uint256 version = fundMe.getVersion();
         assertEq(version, 4);
     }
@@ -159,7 +159,6 @@ contract FundMeTest is Test {
         vm.prank(fundMe.getOwner());
         fundMe.withdraw();
 
-
         // Act with actual gas considerdation since anvil chain gas price is 0
         // uint gasStart = gasleft();
         // vm.prank(fundMe.getOwner());
@@ -191,7 +190,7 @@ contract FundMeTest is Test {
         uint256 startingOwnerBalance = fundMe.getOwner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
 
-        //act 
+        //act
         vm.startPrank(fundMe.getOwner());
         fundMe.withdraw();
         vm.stopPrank();
@@ -199,7 +198,8 @@ contract FundMeTest is Test {
         // assert
         assert(address(fundMe).balance == 0);
         assert(
-            startingOwnerBalance + startingFundMeBalance == fundMe.getOwner().balance
+            startingOwnerBalance + startingFundMeBalance ==
+                fundMe.getOwner().balance
         );
     }
 }
