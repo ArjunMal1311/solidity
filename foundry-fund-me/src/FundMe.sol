@@ -34,7 +34,8 @@ contract FundMe {
         s_addressToAmountFunded[msg.sender] += msg.value;
         s_funders.push(msg.sender);
 
-        emit Funded(msg.sender, msg.value);
+        emit Funded(msg.sender, msg.value); //events are used to log the state of the contract, these logs can be be listened to by external applications or used to track contract activity
+        // they can't be read by smart contracts only by external application
     }
 
     function getVersion() public view returns (uint256) {

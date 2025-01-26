@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Fund Me App</title>
+</head>
+
+<body>
+  <button id="connectButton">Connect</button>
+  <button id="balanceButton">getBalance</button>
+  <button id="withdrawButton">Withdraw</button>
+  <!-- <form> -->
+  <label for="ethAmount">ETH Amount</label>
+  <input id="ethAmount" placeholder="0.1" />
+  <button type="button" id="fundButton"> Fund </button>
+  <!-- </form> -->
+</body>
+
+<script src="./index.js" type="module"></script>
+
+</html>
+
+
+<!-- BACKSTORY WHATS HAPPENING -->
+
+<!-- we have a js object called window -->
+<!-- metamask checks if window.ethereum is defined -->
+<!-- if it is, it will request the user to connect their wallet -->
+<!-- if it is not, it will show a message to the user to install metamask -->
+
+<!-- When execeuting like each function hex code is sent to the blockchain -->
+<!-- This is done so that if any hacker tries to change the function -->
+<!-- Hex code wont match and thus the code wont run -->
