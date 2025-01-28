@@ -58,6 +58,10 @@ contract HelperConfig is Script, CodeConstants {
             });
     }
 
+    function getConfig() public returns (NetworkConfig memory) {
+        return getConfigByChainId(block.chainid);
+    }
+
     function getOrCreateAnvilEthConfig() public returns (NetworkConfig memory) {
         if (localNetworkConfig.vrfCoordinator != address(0)) {
             return localNetworkConfig;

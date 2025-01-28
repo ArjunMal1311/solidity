@@ -12,7 +12,7 @@ import "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
 
 contract Raffle is VRFConsumerBaseV2Plus {
     // Errors
-    error SendMoreToEnterRaffle();
+    error Raffle__SendMoreToEnterRaffle();
     error Raffle__RaffleNotOpen();
     error Raffle__TransferFailed();
     error Raffle__UpkeepNotNeeded();
@@ -74,7 +74,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         // In latest solidity, we have called revert() instead of require()
         // like
         if (msg.value < i_entranceFee) {
-            revert SendMoreToEnterRaffle(); // error SendMoreToEnterRaffle defined above
+            revert Raffle__SendMoreToEnterRaffle(); // error SendMoreToEnterRaffle defined above
         }
 
         if (s_raffleState != RaffleState.OPEN) {
@@ -181,6 +181,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         // s_vrfCoordinator.requestRandomWords(request);
 
         uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
+        requestId = requestId;
         // we gonna call request random words with the request struct
         // and get reqID and once we send this request to the chain
         // chain link node will wait for some block confirmations
@@ -191,6 +192,14 @@ contract Raffle is VRFConsumerBaseV2Plus {
     // Getter functions
     function getEntranceFee() external view returns (uint256) {
         return i_entranceFee;
+    }
+
+    function getRaffleState() external view returns (RaffleState) {
+        return s_raffleState;
+    }
+
+    function getPlayer(uint256 index) external view returns (address) {
+        return s_players[index];
     }
 
     // Why we need to override the fulfillRandomWords function?
@@ -229,5 +238,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
             revert Raffle__TransferFailed();
         }
         emit WinnerPicked(recentWinner);
+
+        requestId = requestId;
     }
 }
