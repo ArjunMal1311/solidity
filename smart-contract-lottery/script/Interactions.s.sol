@@ -5,6 +5,7 @@ import {Script, console} from "forge-std/Script.sol";
 import {Raffle} from "../src/Raffle.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
+import {LinkToken} from "test/mocks/LinkToken.sol";
 
 contract CreateSubscription is Script {
     function createSubscriptionUsingConfig() public returns (uint256, address) {
@@ -35,5 +36,44 @@ contract CreateSubscription is Script {
 
     function run() public {
         createSubscriptionUsingConfig();
+    }
+}
+
+contract FundSubscription is Script {
+    uint256 public constant FUND_AMOUNT = 3 ether;
+    uint256 public constant LOCAL_CHAIN_ID = 31337;
+
+    function fundSubscriptionUsingConfig() public {
+        HelperConfig helperConfig = new HelperConfig();
+
+        address vrfCoordinator = helperConfig.getConfig().vrfCoordinator;
+        uint256 subscriptionId = helperConfig.getConfig().subscriptionId;
+        address linkToken = helperConfig.getConfig().link;
+        fundSubscription(subscriptionId, vrfCoordinator, linkToken);
+    }
+
+    function fundSubscription(
+        uint256 subId,
+        address vrfCoordinator,
+        address linkToken
+    ) public {
+        console.log("Funding subscription %s with %s LINK", subId, FUND_AMOUNT);
+        console.log("Using LINK token at %s", linkToken);
+        console.log("Using VRF Coordinator at %s", vrfCoordinator);
+
+        if (block.chainid == LOCAL_CHAIN_ID) {
+            vm.startBroadcast();
+            VRFCoordinatorV2_5Mock(vrfCoordinator).fundSubscription(
+                subId,
+                FUND_AMOUNT
+            );
+            vm.stopBroadcast();
+        } else {
+            LinkToken(linkToken).transferAndCall(
+                vrfCoordinator,
+                FUND_AMOUNT,
+                abi.encode(subId)
+            );
+        }
     }
 }

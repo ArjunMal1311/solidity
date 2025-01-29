@@ -14,7 +14,12 @@ contract DeployRaffle is Script {
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
 
         if (config.subscriptionId == 0) {
-            // return (Raffle(address(0)), HelperConfig());
+            CreateSubscription createSubscription = new CreateSubscription();
+
+            (config.subscriptionId, config.vrfCoordinator) = createSubscription
+                .createSubscription(config.vrfCoordinator);
+
+            
         }
 
         vm.startBroadcast();
