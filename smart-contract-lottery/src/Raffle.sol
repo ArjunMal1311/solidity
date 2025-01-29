@@ -20,6 +20,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
     // Events
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
+    event RequestedRaffleWinner(uint256 indexed requestId);
 
     // Enums
     enum RaffleState {
@@ -181,12 +182,13 @@ contract Raffle is VRFConsumerBaseV2Plus {
         // s_vrfCoordinator.requestRandomWords(request);
 
         uint256 requestId = s_vrfCoordinator.requestRandomWords(request);
-        requestId = requestId;
         // we gonna call request random words with the request struct
         // and get reqID and once we send this request to the chain
         // chain link node will wait for some block confirmations
         // and call back fulfillrandomwords function
         // and get our random number
+
+        emit RequestedRaffleWinner(requestId);
     }
 
     // Getter functions
@@ -200,6 +202,14 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
     function getPlayer(uint256 index) external view returns (address) {
         return s_players[index];
+    }
+
+    function getLastTimeStamp() external view returns (uint256) {
+        return s_lastTimeStamp;
+    }
+
+    function getRecentWinner() external view returns (address) {
+        return s_recentWinner;
     }
 
     // Why we need to override the fulfillRandomWords function?
