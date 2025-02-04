@@ -82,6 +82,41 @@ contract MoodNFT is ERC721 {
 
             // first we created string, concatenate it with abi.encodePacked, turned it into bytes object, encoded it to base64
             // and then we returned it
+
+            // we can encode strings
+            // like 
+            // function combineString() public pure returns (string memory) {
+            //     return string.concat("Hello", "World");
+            // }
+
+            // whwn we compile the contract we get an abi file and a weird binary file
+            // that numbers and letters stuff that gets when we deploy a contract
+            // that gets sent  in the data field of our contract creation, data is populated
+            // with that binary code for function calls
+
+            // evm stuff read the specific binary that ethereum understands
+            // and then it will execute the code
+
+            // we can encode numbers with encode(1), encode strings with encode("hello")
+            // and then we can decode it with decode
+
+            // to save space we do encode packed 
+            // abi.encodePacked("hello", "world")
+
+            // but we cant decode stuff that we encode packed
+            // so we use abi.encode()
+
+            // we have this call function
+            // (bool success, ) = recentWinner.call{value: address(this).balance}("");
+
+            // in the above thing we are calling the recentWinner address and passing the balance of the contract
+            // to the recentWinner address
+
+            // we can also do this
+            // (bool success, ) = recentWinner.call{value: address(this).balance}("");
+
+            // in the above thing we are calling the recentWinner address and passing the balance of the contract
+            // to the recentWinner address
         );
     }
 
@@ -96,5 +131,21 @@ contract MoodNFT is ERC721 {
     function getTokenCounter() public view returns (uint256) {
         return s_tokenCounter;
     }
+
+
+
+    // at extremly low level what's actually going on is we encode the function name
+    // so that evm or solidity can understand it called function selector and function signature
+    // transfer(address to, uint256 amount)
+
+    // in hex --> 0xa9059cbb
+
+    // we cant compile contract with same function selector
+    // like for 0x23b872dd
+    // transferFrom(address from, address to, uint256 amount)
+    // gasprice_bit_ether(int128)
+
+    // for both hex comes same but function name is different
+    // so we cant compile contract with same function selector
 
 }
