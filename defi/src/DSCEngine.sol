@@ -115,6 +115,7 @@ contract DSCEngine is ReentrancyGuard {
     // ------------------------------------------------------------------------------------------------
     // Public Functions
     // ------------------------------------------------------------------------------------------------
+    // The nonReentrant modifier is used in smart contracts to prevent reentrancy attacks. It ensures that a function cannot be called again (re-entered) while it is still being executed. This is a key security measure to protect contracts from malicious exploits.
     function mintDsc(uint256 amountDscToMint) public moreThanZero(amountDscToMint) nonReentrant {
         s_DscMinted[msg.sender] += amountDscToMint;
         _revertIfHealthFactorIsBroken(msg.sender);
@@ -124,7 +125,7 @@ contract DSCEngine is ReentrancyGuard {
         if (!minted) { revert DSCEngine__MintFailed(); }
     }
 
-
+    // allows users to deposit allowed ERC-20 tokens as collateral, ensures the amount is greater than zero, prevents reentrancy attacks, and emits an event upon successful deposit, while transferring the tokens from the user's account to the contract
     function depositCollateral(address tokenCollateralAddress, uint256 amountCollateral) public moreThanZero(amountCollateral) isAllowedToken(tokenCollateralAddress) nonReentrant {
         s_collateralDeposited[msg.sender][tokenCollateralAddress] += amountCollateral;
         emit CollateralDeposited(msg.sender, tokenCollateralAddress, amountCollateral);
@@ -132,8 +133,6 @@ contract DSCEngine is ReentrancyGuard {
         bool success = IERC20(tokenCollateralAddress).transferFrom(msg.sender, address(this), amountCollateral);
         if (!success) revert DSCEngine__TransferFailed();
     }
-
-
 
 
     // ------------------------------------------------------------------------------------------------
@@ -168,7 +167,6 @@ contract DSCEngine is ReentrancyGuard {
         totalCollateralValue = getAccountCollateralValue(user);
     }
 
-
     function _healthFactor(address user) private view returns (uint256) {
         (uint256 totalDscMinted, uint256 totalCollateralValueInUSD) = _getAccountInformation(user);
         uint256 collateralAdjustedForThreshold = (totalCollateralValueInUSD * LIQUIDATION_THRESHOLD) / LIQUIDATION_PRECISION;
@@ -197,14 +195,12 @@ contract DSCEngine is ReentrancyGuard {
     }
 
 
-
     // ------------------------------------------------------------------------------------------------
     // External || Public View || Pure Functions
     // ------------------------------------------------------------------------------------------------
     function calculateHealthFactor(uint256 totalDscMinted, uint256 collateralValueInUsd) external pure returns (uint256) {
         return _calculateHealthFactor(totalDscMinted, collateralValueInUsd);
     }
-
 
     function getAccountInformation(address user) external view returns (uint256 totalDscMinted, uint256 collateralValueInUsd) {
         return _getAccountInformation(user);
@@ -277,7 +273,5 @@ contract DSCEngine is ReentrancyGuard {
     function getHealthFactor(address user) external view returns (uint256) {
         return _healthFactor(user);
     }
-    
-    
 }
 
