@@ -17,7 +17,8 @@ import {StdInvariant} from "forge-std/StdInvariant.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
+import {console} from "forge-std/console.sol";
+import {Handler} from "./Handler.t.sol";
 
 contract InvariantsTest is StdInvariant, Test {
     DeployDSC deployer;
@@ -26,12 +27,16 @@ contract InvariantsTest is StdInvariant, Test {
     HelperConfig config;
     address weth;
     address wbtc;
+    Handler handler;
 
     function setUp() external {
         deployer = new DeployDSC();
         (dsc, dsce, config) = deployer.run();
         (,,weth, wbtc,) = config.activeNetworkConfig();
-        targetContract(address(dsce));
+        // targetContract(address(dsce));
+
+        handler = new Handler(dsce, dsc);
+        targetContract(address(handler));
     }
 
     function invariant_totalSupplyOfDSCShouldBeLessThanTotalCollateralValue() public view {
@@ -43,7 +48,17 @@ contract InvariantsTest is StdInvariant, Test {
         uint256 wethUsdValue = dsce.getUsdValue(weth, totalWethDeposited);
         uint256 btcUsdValue = dsce.getUsdValue(wbtc, totalBtcDeposited);
 
+        console.log("wethUsdValue", wethUsdValue);
+        console.log("btcUsdValue", btcUsdValue);
+        console.log("totalSupply", totalSupply);
+        console.log("Times Mint called", handler.timesMintIsCalled());
+
         assert(wethUsdValue + btcUsdValue >= totalSupply);
+    }
+
+    function invariant_gettersShouldNotRevert() public view {
+        dsce.getLiquidationBonus();
+        dsce.getPrecision();
     }
     
     
