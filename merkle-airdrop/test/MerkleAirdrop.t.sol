@@ -12,6 +12,9 @@ import {DeployMerkleAirdrop} from "../script/DeployMerkleAirdrop.s.sol";
 contract MerkleAirdropTest is Test, ZkSyncChainChecker {
     MerkleAirdrop public airdrop;
     BagelToken public token;
+    address gasPayer;
+    address user;
+    uint256 userPrivKey;
 
     bytes32 public ROOT =
         0xaa5d581231e596618465a56aa0f5870ba6e20785fe436d5bfb82b08662ccc7c4;
@@ -36,10 +39,11 @@ contract MerkleAirdropTest is Test, ZkSyncChainChecker {
         } else {
             token = new BagelToken();
             airdrop = new MerkleAirdrop(ROOT, token);
-
             token.mint(token.owner(), AMOUNT_TO_SEND);
             token.transfer(address(airdrop), AMOUNT_TO_SEND);
         }
+        gasPayer = makeAddr("gasPayer");
+        (user, userPrivKey) = makeAddrAndKey("user");
     }
 
     // hey user, you are in the list
@@ -98,17 +102,61 @@ contract MerkleAirdropTest is Test, ZkSyncChainChecker {
     // r' == r ?
 
 
+
+
+    // Transaction Types
+    // 0x0 Legacy
+    // 0x1 contains array of access list and storage keys
+    // 0x2 added maxPriorityFeePerGas and baseFees
+
+    // 0x3 Scaling solution for rollups, added max_blob_gas and blob_versioned_hashes
+    // 0x71 standardize the message data structure
+    // smart contracts must be deployed using this type 0x71 or 113
+    // additional fields -> gasPerPubData, customSignature, payMasterParams, factory_deps
+
+    // 0xff - priortity transactions
+
+
+
+    // in a normal transaction, all transaction are stored on the chain
+    // Rollsups help to scale ethereum so that transactions are not expensive
+
+    // Bundle up transactions and then send it to the chain
+    // compressed transactions send to chain and ethereum has to do little work
+    // to verify batch of transactions
+
+    // here's was the issue earlier we used to store complete transactions on the
+    // ethereum node
+
+    // blobs are new transaction type that allows us to store data on chain for short period of time
+    // we cant access the data itself, but we can access the hash of the data
+    // blobs were added because rollups wanted a cheaper way to validate transactions
+
+    // How do rollups work?
+    // 1. submit a transaction with a blob along with some proof data
+    // 2. contract on chain access a hash of the blob with BLOBHASH opcode
+    // 3. it will then pass BLOBHASH combined with proof data to new point
+    // evaluation opcode to help verify the transaction batch
+
+    function signMessage(uint256 privKey, address account) public view returns (uint8 v, bytes32 r, bytes32 s) {
+        bytes32 hashedMessage = airdrop.getMessageHash(account, AMOUNT_TO_CLAIM);
+        (v, r, s) = vm.sign(privKey, hashedMessage);
+    }
+
+
     function testUsersCanClaim() public {
-        uint256 startingBalance = token.balanceOf(VALID_USER);
+        uint256 startingBalance = token.balanceOf(user);
 
-        vm.prank(VALID_USER);
-        airdrop.claim(VALID_USER, AMOUNT_TO_CLAIM, PROOFS);
+        // get the signature
+        vm.startPrank(user);
+        (uint8 v, bytes32 r, bytes32 s) = signMessage(userPrivKey, user);
+        vm.stopPrank();
 
-        uint256 endingBalance = token.balanceOf(VALID_USER);
-
-        console.log("endingBalance", endingBalance);
-        console.log("startingBalance", startingBalance);
-
+        // gasPayer claims the airdrop for the user
+        vm.prank(gasPayer);
+        airdrop.claim(user, AMOUNT_TO_CLAIM, PROOFS, v, r, s);
+        uint256 endingBalance = token.balanceOf(user);
+        console.log("Ending balance: %d", endingBalance);
         assertEq(endingBalance - startingBalance, AMOUNT_TO_CLAIM);
     }
 }
