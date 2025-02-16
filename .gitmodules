@@ -49,3 +49,6 @@
 [submodule "merkle-airdrop/lib/foundry-devops"]
 	path = merkle-airdrop/lib/foundry-devops
 	url = https://github.com/Cyfrin/foundry-devops
+[submodule "upgradable-smart-contracts/lib/forge-std"]
+	path = upgradable-smart-contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
