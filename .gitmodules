@@ -58,3 +58,9 @@
 [submodule "abstraction/lib/forge-std"]
 	path = abstraction/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "abstraction/lib/account-abstraction"]
+	path = abstraction/lib/account-abstraction
+	url = https://github.com/eth-infinitism/account-abstraction
+[submodule "abstraction/lib/openzeppelin-contracts"]
+	path = abstraction/lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
