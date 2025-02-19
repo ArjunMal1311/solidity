@@ -67,3 +67,6 @@
 [submodule "abstraction/lib/foundry-devops"]
 	path = abstraction/lib/foundry-devops
 	url = https://github.com/Cyfrin/foundry-devops
+[submodule "abstraction/lib/foundry-era-contracts"]
+	path = abstraction/lib/foundry-era-contracts
+	url = https://github.com/Cyfrin/foundry-era-contracts
