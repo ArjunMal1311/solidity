@@ -64,3 +64,6 @@
 [submodule "abstraction/lib/openzeppelin-contracts"]
 	path = abstraction/lib/openzeppelin-contracts
 	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "abstraction/lib/foundry-devops"]
+	path = abstraction/lib/foundry-devops
+	url = https://github.com/Cyfrin/foundry-devops

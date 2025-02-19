@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
 // stable coin is a cryptocurrency whose buying power stays relatively the same like dollar fluctuates less
 // than bitcoin
 
