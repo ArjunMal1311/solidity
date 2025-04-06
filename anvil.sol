@@ -64,3 +64,12 @@ pragma solidity ^0.8.0;
 // There are other values that play an important part that weren't presented in that list, namely the `v`, `r`, and `s`. These are components of a transaction's signature, which are used to validate the authenticity and integrity of the transaction.
 // Whenever we send a transaction over the blockchain there's a signature happening, that's where we use our `private key`.
 // **Important:** Every time you change the state of the blockchain you do it using a transaction. The thing that indicates the change is the `data` field of a transaction.
+
+
+
+// Act with actual gas considerdation since anvil chain gas price is 0
+// uint gasStart = gasleft();
+// vm.prank(fundMe.getOwner());
+// fundMe.withdraw();
+// uint gasEnd = gasleft();
+// console.log("Gas used:", (gasStart - gasEnd) * tx.gasprice);

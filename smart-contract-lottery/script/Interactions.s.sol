@@ -17,9 +17,7 @@ contract CreateSubscription is Script {
         return (subId, vrfCoordinator);
     }
 
-    function createSubscription(
-        address vrfCoordinator
-    ) public returns (uint256, address) {
+    function createSubscription(address vrfCoordinator) public returns (uint256, address) {
         console.log("Creating subscription on chain %s", block.chainid);
 
         vm.startBroadcast();
@@ -53,11 +51,7 @@ contract FundSubscription is Script {
         fundSubscription(subscriptionId, vrfCoordinator, linkToken);
     }
 
-    function fundSubscription(
-        uint256 subId,
-        address vrfCoordinator,
-        address linkToken
-    ) public {
+    function fundSubscription(uint256 subId, address vrfCoordinator, address linkToken) public {
         console.log("Funding subscription %s with %s LINK", subId, FUND_AMOUNT);
         console.log("Using LINK token at %s", linkToken);
         console.log("Using VRF Coordinator at %s", vrfCoordinator);
