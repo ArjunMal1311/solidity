@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-// Account Abstraction is a concept in Ethereum that allows users to create and manage accounts in a more flexible and secure way.
+pragma solidity ^0.8.24;
 
 // Traditional Web3
 // 1. Users must download and set up a wallet (e.g., MetaMask).
